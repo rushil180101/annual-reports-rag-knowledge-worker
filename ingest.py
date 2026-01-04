@@ -6,32 +6,19 @@ import glob
 from argparse import ArgumentParser
 from chromadb import PersistentClient
 from chromadb.api import ClientAPI
-from pydantic import BaseModel, Field
 from pypdf import PdfReader
 from typing import Any, Generator, List
 from langchain_core.documents import Document
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_huggingface import HuggingFaceEmbeddings
-
-
-##### Constants #####
-KNOWLEDGE_BASE_DIR_PATH = "knowledge_base"
-EMBEDDING_MODEL = "sentence-transformers/all-MiniLM-L6-v2"
-VECTOR_DB_PATH = "vector_db"
-VECTOR_DB_COLLECTION_NAME = "msgm_annual_reports"
-CHROMA_DB_COLLECTION_MAX_BATCH_SIZE = 5461
-
-
-##### Classes #####
-class Chunk(BaseModel):
-    """
-    Represents a chunk of the document
-    """
-
-    source_document_name: str = Field(
-        description="Source document name from which this chunk is extracted"
-    )
-    content: str = Field(description="Content of the chunk")
+from common.models import Chunk
+from common.constants import (
+    KNOWLEDGE_BASE_DIR_PATH,
+    EMBEDDING_MODEL,
+    VECTOR_DB_PATH,
+    VECTOR_DB_COLLECTION_NAME,
+    CHROMA_DB_COLLECTION_MAX_BATCH_SIZE,
+)
 
 
 ##### Helper functions #####
@@ -48,9 +35,7 @@ def fetch_documents(knowledge_base_dir_path: str) -> List[Document]:
         document = Document(page_content=content, metadata={"name": name})
         documents.append(document)
 
-    print(
-        f"Fetched {len(documents)} documents from knowledge base directory ({knowledge_base_dir_path})"
-    )
+    print(f"Fetched {len(documents)} documents from knowledge base directory ({knowledge_base_dir_path})")
     return documents
 
 
@@ -88,9 +73,7 @@ def get_batches(
         start_idx = end_idx
 
 
-def store_chunks(
-    chunks: List[Chunk], chroma_client: ClientAPI, existing_collections: list
-) -> None:
+def store_chunks(chunks: List[Chunk], chroma_client: ClientAPI, existing_collections: list) -> None:
     texts, metadatas, ids = [], [], []
     for chunk_id, chunk in enumerate(chunks):
         ids.append(str(chunk_id))
@@ -111,9 +94,7 @@ def store_chunks(
     batch_id = 1
     batches = get_batches(ids, embeddings, texts, metadatas)
     for ids, embeddings, documents, metadatas in batches:
-        collection.add(
-            ids=ids, embeddings=embeddings, documents=documents, metadatas=metadatas
-        )
+        collection.add(ids=ids, embeddings=embeddings, documents=documents, metadatas=metadatas)
         print(f"Inserted batch {batch_id} ({len(ids)} elements)")
         batch_id += 1
 
