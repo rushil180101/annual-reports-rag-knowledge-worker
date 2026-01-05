@@ -2,6 +2,7 @@
 This module defines the logic for reading and ingesting documents for RAG application.
 """
 
+import os
 import glob
 from argparse import ArgumentParser
 from chromadb import PersistentClient
@@ -101,29 +102,33 @@ def store_chunks(chunks: List[Chunk], chroma_client: ClientAPI, existing_collect
     print(f"Vector store created with {collection.count()} documents")
 
 
-##### Main program execution #####
-if __name__ == "__main__":
-    parser = ArgumentParser()
-    parser.add_argument(
-        "--reset-db",
-        help="deletes current vector store and creates a new vector store",
-        action="store_true",
-    )
-    args = parser.parse_args()
+def check_vector_store_existence() -> bool:
+    db_exists = os.path.isdir(VECTOR_DB_PATH)
+    if db_exists:
+        chroma_client = PersistentClient(path=VECTOR_DB_PATH)
+        collection_names = [c.name for c in chroma_client.list_collections()]
+        return VECTOR_DB_COLLECTION_NAME in collection_names
+    return False
 
+
+def create_vector_store() -> None:
+    print("Creating vector store")
     chroma_client = PersistentClient(path=VECTOR_DB_PATH)
     existing_collections = [c.name for c in chroma_client.list_collections()]
-    if VECTOR_DB_COLLECTION_NAME not in existing_collections or args.reset_db:
-        print("Proceeding to scan documents and create vector embeddings")
-        documents = fetch_documents(knowledge_base_dir_path=KNOWLEDGE_BASE_DIR_PATH)
-        chunks = split_documents(documents=documents)
-        store_chunks(
-            chunks=chunks,
-            chroma_client=chroma_client,
-            existing_collections=existing_collections,
-        )
-        print("Ingested documents into vector database")
-    else:
-        print("Documents are already present in the vector database")
+    print("Proceeding to scan documents and create vector embeddings")
+    documents = fetch_documents(knowledge_base_dir_path=KNOWLEDGE_BASE_DIR_PATH)
+    chunks = split_documents(documents=documents)
+    store_chunks(
+        chunks=chunks,
+        chroma_client=chroma_client,
+        existing_collections=existing_collections,
+    )
+    print("Created vector store and ingested documents")
 
-    print("Done")
+
+def setup_vector_store() -> None:
+    vector_store_exists = check_vector_store_existence()
+    if not vector_store_exists:
+        create_vector_store()
+    else:
+        print("Vector store already exists")

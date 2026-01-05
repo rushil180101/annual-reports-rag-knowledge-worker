@@ -3,19 +3,13 @@ This module is the interface for interacting with RAG application.
 """
 
 import gradio as gr
-from answer import (
-    check_vector_store_existence,
-    chat,
-)
+from answer import chat
+from ingest import setup_vector_store
 
 if __name__ == "__main__":
-    vector_store_exists = check_vector_store_existence()
-    if not vector_store_exists:
-        raise Exception("Vector store does not exist. Please setup the vector store first.")
-
+    setup_vector_store()
     demo = gr.ChatInterface(
         fn=chat,
-        title="📚 RAG Chat Assistant",
-        description="Ask questions over your document knowledge base",
+        title="📚 RAG Chat Assistant for Annual Reports",
     )
     demo.launch(inbrowser=True)

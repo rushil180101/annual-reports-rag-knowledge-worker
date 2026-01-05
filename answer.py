@@ -26,15 +26,6 @@ user's questions. If you don't know the answer, say so.
 """
 
 
-def check_vector_store_existence() -> bool:
-    db_exists = os.path.isdir(VECTOR_DB_PATH)
-    if db_exists:
-        chroma_client = PersistentClient(path=VECTOR_DB_PATH)
-        collection_names = [c.name for c in chroma_client.list_collections()]
-        return VECTOR_DB_COLLECTION_NAME in collection_names
-    return False
-
-
 def get_relevant_chunks(question: str) -> List[Chunk]:
     print("Proceeding to fetch relevant chunks from vector store")
     chroma_client = PersistentClient(path=VECTOR_DB_PATH)
