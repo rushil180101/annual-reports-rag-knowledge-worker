@@ -3,22 +3,23 @@ This module defines the helper functions for LLM interaction and data processing
 """
 
 import json
-import os
 from typing import List
+
 from chromadb import PersistentClient
 from langchain_huggingface import HuggingFaceEmbeddings
 from litellm import completion
-from common.models import Chunk
+
 from common.constants import (
-    OPENROUTER_BASE_URL,
-    OPENROUTER_API_KEY,
-    EMBEDDING_MODEL,
-    VECTOR_DB_PATH,
-    VECTOR_DB_COLLECTION_NAME,
-    EMBEDDINGS_RETRIEVAL_COUNT,
-    CHUNKS_RERANKING_MODEL,
     CHAT_MODEL,
+    CHUNKS_RERANKING_MODEL,
+    EMBEDDING_MODEL,
+    EMBEDDINGS_RETRIEVAL_COUNT,
+    OPENROUTER_API_KEY,
+    OPENROUTER_BASE_URL,
+    VECTOR_DB_COLLECTION_NAME,
+    VECTOR_DB_PATH,
 )
+from common.models import Chunk
 
 CHAT_ASSISTANT_SYSTEM_PROMPT = """
 You are a helpful chat assistant responsible for answering
@@ -61,7 +62,7 @@ def rerank_chunks(question: str, chunks: List[Chunk]) -> List[Chunk]:
         question, with the most relevant chunk being ranked first and the least
         relevant chunk being ranked last. You should return the list of all chunk
         ids, re-ranked in the order from most relevant to the least relevant.
-        Return only the list of chunk ids.
+        Respond only with the list of chunk ids in python list format, nothing else.
         """
     chunks_reranking_user_prompt = """
         Re-order the following document chunks in the order of their relevance
@@ -81,7 +82,8 @@ def rerank_chunks(question: str, chunks: List[Chunk]) -> List[Chunk]:
         model=CHUNKS_RERANKING_MODEL,
         messages=messages,
     )
-    reranked_chunk_ids = json.loads(response.choices[0].message.content)
+    llm_response_content = response.choices[0].message.content
+    reranked_chunk_ids = json.loads(llm_response_content)
     assert len(reranked_chunk_ids) == len(chunks)
     print(f"Reranked {len(reranked_chunk_ids)} chunks: {reranked_chunk_ids}")
     return reranked_chunk_ids

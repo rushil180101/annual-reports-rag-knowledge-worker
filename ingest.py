@@ -2,24 +2,26 @@
 This module defines the logic for reading and ingesting documents for RAG application.
 """
 
-import os
 import glob
+import os
 from argparse import ArgumentParser
+from typing import Any, Generator, List
+
 from chromadb import PersistentClient
 from chromadb.api import ClientAPI
-from pypdf import PdfReader
-from typing import Any, Generator, List
 from langchain_core.documents import Document
-from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_huggingface import HuggingFaceEmbeddings
-from common.models import Chunk
+from langchain_text_splitters import RecursiveCharacterTextSplitter
+from pypdf import PdfReader
+
 from common.constants import (
-    KNOWLEDGE_BASE_DIR_PATH,
-    EMBEDDING_MODEL,
-    VECTOR_DB_PATH,
-    VECTOR_DB_COLLECTION_NAME,
     CHROMA_DB_COLLECTION_MAX_BATCH_SIZE,
+    EMBEDDING_MODEL,
+    KNOWLEDGE_BASE_DIR_PATH,
+    VECTOR_DB_COLLECTION_NAME,
+    VECTOR_DB_PATH,
 )
+from common.models import Chunk
 
 
 ##### Helper functions #####
