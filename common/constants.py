@@ -3,6 +3,7 @@ This module defines the constants for RAG application.
 """
 
 import os
+
 from dotenv import load_dotenv
 
 load_dotenv(override=True)
@@ -20,5 +21,6 @@ CHROMA_DB_COLLECTION_MAX_BATCH_SIZE = 5461
 EMBEDDINGS_RETRIEVAL_COUNT = 10
 
 # LLM interaction models
-CHUNKS_RERANKING_MODEL = "openai/gpt-oss-120b:free"
-CHAT_MODEL = "openai/gpt-oss-120b:free"
+CHUNKS_RERANKING_MODEL = "openrouter/mistralai/devstral-2512:free"
+CHAT_MODEL = "openrouter/mistralai/devstral-2512:free"
+RAG_ANSWER_EVALUATION_MODEL = "openrouter/mistralai/devstral-2512:free"
