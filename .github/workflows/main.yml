@@ -16,4 +16,4 @@ jobs:
       - name: Push to hub
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
-        run: git push https://rushil180101:$HF_TOKEN@huggingface.co/spaces/rushil180101/annual-reports-rag-knowledge-worker main
+        run: git push -f https://rushil180101:$HF_TOKEN@huggingface.co/spaces/rushil180101/annual-reports-rag-knowledge-worker main
