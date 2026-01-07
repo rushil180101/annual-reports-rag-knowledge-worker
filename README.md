@@ -1,3 +1,14 @@
+---
+title: RAG knowledge worker / chat assistant (Financial Annual Reports data)
+emoji: 📚
+colorFrom: green
+colorTo: purple
+sdk: gradio
+sdk_version: 6.2.0
+app_file: app.py
+pinned: false
+---
+
 # RAG knowledge worker / chat assistant for annual reports
 
 This project implements RAG based chat assistant for answering questions related to annual reports data.
