@@ -61,7 +61,7 @@ def get_batches(
     embeddings: List[List[float]],
     texts: List[str],
     metadatas: List[dict],
-) -> Generator[Any]:
+) -> Generator[Any, Any, Any]:
     start_idx = 0
     while len(ids[start_idx:]):
         end_idx = min(
