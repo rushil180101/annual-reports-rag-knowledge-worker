@@ -80,9 +80,10 @@ def get_test_set_evaluation_result() -> TestSetEvaluationResult:
 
 if __name__ == "__main__":
     result = get_test_set_evaluation_result()
-    print(f"avg_mrr = {result.avg_mrr}")
-    print(f"avg_dcg = {result.avg_dcg}")
-    print(f"avg_ndcg = {result.avg_ndcg}")
-    print(f"avg_relevance = {result.avg_relevance}")
-    print(f"avg_accuracy = {result.avg_accuracy}")
-    print(f"avg_completeness = {result.avg_completeness}")
+    print("RAG test set evaluation results")
+    print(f"avg_mrr = {result.avg_mrr * 100} / 100")
+    print(f"avg_dcg = {result.avg_dcg * 100} / 100")
+    print(f"avg_ndcg = {result.avg_ndcg * 100} / 100")
+    print(f"avg_relevance = {result.avg_relevance} / 5")
+    print(f"avg_accuracy = {result.avg_accuracy} / 5")
+    print(f"avg_completeness = {result.avg_completeness} / 5")
