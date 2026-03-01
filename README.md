@@ -13,6 +13,8 @@ pinned: false
 
 This project implements RAG based chat assistant for answering questions related to annual reports data.
 
+Live on huggingface: https://huggingface.co/spaces/rushil180101/annual-reports-rag-knowledge-worker
+
 ## How to execute
 - Install dependencies
 
